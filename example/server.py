@@ -5,7 +5,7 @@ servicer = server.create_servicer('Greeter')
 
 
 @servicer.endpoint('SayHello')
-def SayHello(self, request, context):
+def SayHello(request, context):
     hello_to = request.name
     return servicer.response('HelloReply', {
         'message': hello_to
@@ -13,7 +13,7 @@ def SayHello(self, request, context):
 
 
 @servicer.endpoint('ListNames')
-def ListNames(self, request, context):
+def ListNames(request, context):
     for name in request.name.split(','):
         yield servicer.response('HelloReply', {
             'message': name
@@ -21,7 +21,7 @@ def ListNames(self, request, context):
 
 
 @servicer.endpoint('HelloMany')
-def HelloMany(self, request, context):
+def HelloMany(request, context):
     names = ""
     for single_request in request:
         names += single_request.name
@@ -31,7 +31,7 @@ def HelloMany(self, request, context):
 
 
 @servicer.endpoint('HelloChat')
-def HelloChat(self, request, context):
+def HelloChat(request, context):
     for single_reqeust in request:
         yield servicer.response('HelloReply', {
             'message': 'Hello: {}'.format(single_reqeust.name)

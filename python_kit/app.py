@@ -16,8 +16,10 @@ class Servicer(object):
     def endpoint(self, endpoint_name):
         def decorator(f):
             if endpoint_name not in self.handlers:
-                self.handlers[endpoint_name] = f
-            return f
+                def wrapper(self, *args, **kwargs):
+                    return f(*args, **kwargs)
+                self.handlers[endpoint_name] = wrapper
+            return
         return decorator
 
     def response(self, res_type_name, res_dict):

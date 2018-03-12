@@ -21,7 +21,7 @@ server = PythonKit(__name__, protos='./protos/hello.proto')
 servicer = server.create_servicer('Greeter')
 
 @servicer.endpoint('SayHello')
-def SayHello(self, request, context):
+def SayHello(request, context):
     hello_to = request.name
     return servicer.response('HelloReply', {
         'message': hello_to
