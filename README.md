@@ -7,10 +7,6 @@ Write grpc application like Flask.
 pip install git+https://github.com/htwenning/python_kit
 ```
 
-## Note
-
-This project is based on Python2.
-
 ## Example
 
 ```python
