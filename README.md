@@ -1,5 +1,10 @@
-# PythonKit
+# PythonKit 
+
+[![Build Status](https://travis-ci.org/htwenning/python_kit.svg?branch=master)](https://travis-ci.org/htwenning/python_kit)
+
 Write grpc application like Flask.
+
+
 
 ## Installing
 
