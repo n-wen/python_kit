@@ -30,6 +30,7 @@ class Servicer(object):
 
 
 class PythonKit(object):
+    server = None
     def __init__(self, name, protos):
         self.name = name
         self.servicers = {}
@@ -65,14 +66,18 @@ class PythonKit(object):
                      "--grpc_python_out={}".format(protos_dirname),
                      self.protos])
 
-    def run(self, address):
+    def run(self, address, is_test=False):
         self.build_pb()
 
-        server = grpc.server(futures.ThreadPoolExecutor(max_workers=(multiprocessing.cpu_count() * 2 + 1)))
+        self.server = grpc.server(futures.ThreadPoolExecutor(max_workers=(multiprocessing.cpu_count() * 2 + 1)))
         pb2_module_name = self.server_name + '_pb2'
         pb2_grpc_module_name = self.server_name + '_pb2_grpc'
-        self.pb2_grpc_module = import_module('.{}'.format(pb2_grpc_module_name), self.rel_protos)
-        self.pb2_module = import_module('.{}'.format(pb2_module_name), self.rel_protos)
+        if self.rel_protos == '.':
+            self.pb2_grpc_module = import_module('{}'.format(pb2_grpc_module_name))
+            self.pb2_module = import_module('{}'.format(pb2_module_name))
+        else:
+            self.pb2_grpc_module = import_module('.{}'.format(pb2_grpc_module_name), self.rel_protos)
+            self.pb2_module = import_module('.{}'.format(pb2_module_name), self.rel_protos)
         for servicer in self.servicers.values():
             # get grpc servicer class
             # create a class extend grpc servicer class
@@ -81,11 +86,11 @@ class PythonKit(object):
             servicer_class = type("test", (servicer_class,), servicer.handlers)
 
             add_method = getattr(self.pb2_grpc_module, 'add_{}Servicer_to_server'.format(servicer.name))
-            add_method(servicer_class(), server)
-        server.add_insecure_port(address)
-        server.start()
+            add_method(servicer_class(), self.server)
+        self.server.add_insecure_port(address)
+        self.server.start()
         try:
-            while True:
+            while True and not is_test:
                 time.sleep(_25_HOURS_IN_SECONDS)
         except KeyboardInterrupt:
-            server.stop(0)
+            self.server.stop(0)
