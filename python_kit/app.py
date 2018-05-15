@@ -47,6 +47,10 @@ class PythonKit(object):
             self.servicers[servicer_name] = servicer
         return self.servicers[servicer_name]
 
+    def add_servicer(self, servicer):
+        servicer.server = self
+        self.servicers[servicer.name] = servicer
+
     def build_pb(self):
 
         """
