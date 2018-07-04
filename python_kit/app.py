@@ -69,7 +69,11 @@ if PYTHON3:
     async def _call_behavior(rpc_event, state, behavior, argument, request_deserializer):
         context = _server._Context(rpc_event, state, request_deserializer)
         try:
-            return await behavior(argument, context), True
+            behavior_result = behavior(argument, context)
+            if inspect.iscoroutine(behavior_result):
+                return await behavior_result, True
+            else:
+                return behavior_result, True
         except Exception as e:  # pylint: disable=broad-except
             with state.condition:
                 if e not in state.rpc_errors:
@@ -82,7 +86,11 @@ if PYTHON3:
 
     async def _take_response_from_response_iterator(rpc_event, state, response_iterator):
         try:
+            if inspect.isgenerator(response_iterator):
+                return response_iterator.__next__(), True
             return await response_iterator.__anext__(), True
+        except StopIteration:
+            return None, True
         except StopAsyncIteration:
             return None, True
         except Exception as e:  # pylint: disable=broad-except
