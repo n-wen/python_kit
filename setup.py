@@ -26,7 +26,7 @@ else:
 
 setup(
     name='PythonKit',
-    version='0.0.2',
+    version='0.0.3',
     url='https://github.com/htwenning/python_kit',
     license='BSD',
     author='wenning',
