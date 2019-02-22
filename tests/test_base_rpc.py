@@ -1,5 +1,5 @@
 import pytest
-from python_kit.app import PythonKit
+from python_kit import PythonKit
 import sys
 
 sys.path.append('./tests')

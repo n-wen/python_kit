@@ -1,4 +1,4 @@
-venv/
+venv*/
 *.pyc
 .idea/
 build/
@@ -6,3 +6,5 @@ dist/
 *.egg-info/
 .cache/
 .pytest_cache/
+hello_pb2.py
+hello_pb2_grpc.py
