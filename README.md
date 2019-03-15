@@ -9,8 +9,9 @@ Write grpc application like Flask.
 ## Installing
 
 ```bash
-pip install git+https://github.com/htwenning/python_kit
+pip install PythonGRPCKit
 ```
+
 
 ## Example
 
